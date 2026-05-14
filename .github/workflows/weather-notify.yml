@@ -1,0 +1,21 @@
+name: 포항 날씨 알림
+
+on:
+  schedule:
+    - cron: '0 21 * * *'  # 매일 06:00 KST (UTC+9)
+  workflow_dispatch:       # 수동 실행 가능
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: pip install pytz
+
+      - name: Send weather notification
+        env:
+          OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        run: python3 weather_notify.py
